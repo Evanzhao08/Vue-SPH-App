@@ -29,6 +29,17 @@ import router from '@/router'
 import store from '@/store';
 //统一接口文件夹里的全部请求 统一引入
 import * as API from '@/api'
+//引入插件
+import VueLazyload from 'vue-lazyload'
+import lodadgif from '@/assets/images/loading.gif'
+Vue.use(VueLazyload, {
+  preLoad: 1.3,
+ // error: 'dist/error.png',
+  loading: lodadgif,
+ // attempt: 1
+})
+//引入表单校验插件
+import  "@/plugins/validate"
 new Vue({
   render: h => h(App),
   //注册路由

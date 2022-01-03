@@ -10,31 +10,65 @@
       </h3>
       <div class="content">
         <label>手机号:</label>
-        <input type="text" placeholder="请输入你的手机号" v-model="phone" />
-        <span class="error-msg">错误提示信息</span>
+        <input
+          type="text"
+          placeholder="请输入你的手机号"
+          v-model="phone"
+          name="phone"
+          v-validate="{ required: true, regex: /^1\d{10}$/ }"
+          :class="{ invalid: errors.has('phone') }"
+        />
+        <span class="error-msg">{{ errors.first("phone") }}</span>
       </div>
       <div class="content">
         <label>验证码:</label>
-        <input type="text" placeholder="请输入验证码" v-model="code" />
+        <input
+          type="text"
+          placeholder="请输入验证码"
+          v-model="code"
+          name="code"
+          v-validate="{ required: true, regex: /^\d{6}$/ }"
+          :class="{ invalid: errors.has('code') }"
+        />
         <button style="width: 100px; height: 37px" @click="getCode">
           获取验证码
         </button>
-        <span class="error-msg">错误提示信息</span>
+        <span class="error-msg">{{ errors.first("code") }}</span>
       </div>
       <div class="content">
         <label>登录密码:</label>
-        <input type="password" placeholder="请输入你的登录密码" v-model="password"/>
-        <span class="error-msg">错误提示信息</span>
+        <input
+          type="password"
+          placeholder="请输入你的登录密码"
+          v-model="password"
+          name="password"
+          v-validate="{ required: true, regex: /^[0-9A-Za-z]{8,20}$/ }"
+          :class="{ invalid: errors.has('password') }"
+        />
+        <span class="error-msg">{{ errors.first("password") }}</span>
       </div>
       <div class="content">
         <label>确认密码:</label>
-        <input type="password" placeholder="请输入确认密码" v-model="repassword"/>
-        <span class="error-msg">错误提示信息</span>
+        <input
+          type="password"
+          placeholder="请输入你的登录密码"
+          v-model="repassword"
+          name="repassword"
+          v-validate="{ required: true, regex: /^[0-9A-Za-z]{8,20}$/ }"
+          :class="{ invalid: errors.has('repassword') }"
+        />
+        <span class="error-msg">{{ errors.first("repassword") }}</span>
       </div>
       <div class="controls">
-        <input name="m1" type="checkbox" :checked="agree"/>
+        <input
+          type="checkbox"
+          v-model="agree"
+          name="agree"
+          v-validate="{ required: true, agree: true }"
+          :class="{ invalid: errors.has('agree') }"
+        />
         <span>同意协议并注册《尚品汇用户协议》</span>
-        <span class="error-msg">错误提示信息</span>
+        <span class="error-msg">{{ errors.first("agree") }}</span>
       </div>
       <div class="btn">
         <button @click="userRegister">完成注册</button>
@@ -67,9 +101,9 @@ export default {
       //手机表单数据
       phone: "",
       code: "",
-      password:'',
-      repassword:'',
-      agree:true
+      password: "",
+      repassword: "",
+      agree: true,
     };
   },
   methods: {
@@ -77,21 +111,25 @@ export default {
       try {
         const { phone } = this;
         phone && (await this.$store.dispatch("getCode", phone));
-        this.code = this.$store.state.user.code
+        this.code = this.$store.state.user.code;
       } catch (error) {
         alert(error.message);
       }
     },
-    async userRegister(){
-      try {
-         const {phone,code,password,repassword} = this;
-      let user ={phone,code,password};
-      (phone && code&&password==repassword) && await this.$store.dispatch('userRegister',user)
-        this.$router.push('/login');
-      } catch (error) {
-        alert(error.message)
+    async userRegister() {
+      const success = await this.$validator.validateAll(); //全部表单验证
+     // console.log(success);
+      if (success) {
+        try {
+          const { phone, code, password } = this;
+          let user = { phone, code, password };
+          await this.$store.dispatch("userRegister", user);
+          this.$router.push("/login");
+        } catch (error) {
+          alert(error.message);
+        }
       }
-    }
+    },
   },
 };
 </script>

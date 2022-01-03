@@ -140,7 +140,7 @@ export default {
             //action:区分取消|确定按钮
             //instance:当前组件实例
             //done:关闭弹出框的方法
-            console.log(action);
+            //console.log(action);
             if (action == 'cancel') {
               //清除定时器
                clearInterval(this.timer);
@@ -167,7 +167,7 @@ export default {
           let result = await this.$API.reqPayStatus(this.orderId);
           if (result.code == 200) {
             //第一步：清除定时器
-            console.log('计数器111');
+           // console.log('计数器111');
             clearInterval(this.timer);
             this.timer = null;
             this.code = result.code;
