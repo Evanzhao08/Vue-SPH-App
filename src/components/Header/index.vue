@@ -5,15 +5,21 @@
                 <div class="container">
                     <div class="loginList">
                         <p>尚品汇欢迎您！</p>
-                        <p>
+                        <!-- 没有用户名未登录 -->
+                        <p v-if="!userName">
                             <span>请</span>
                             <router-link to="/login">登录</router-link>
                             <router-link class="register" to="/register">免费注册</router-link>
                         </p>
+                        <!-- 登录了 -->
+                        <p v-else>
+                            <a>{{userName}}</a>
+                            <a class="register" @click="logout">退出登录</a>
+                        </p>
                     </div>
                     <div class="typeList">
-                        <a href="###">我的订单</a>
-                        <a href="###">我的购物车</a>
+                        <router-link to="/center/myorder">我的订单</router-link>
+                        <router-link to="/shopcart">我的购物车</router-link>
                         <a href="###">我的尚品汇</a>
                         <a href="###">尚品汇会员</a>
                         <a href="###">企业采购</a>
@@ -48,6 +54,11 @@ export default {
             keyword:''
         }
     },
+    computed:{
+       userName(){
+           return this.$store.state.user.userInfo.name
+       }
+    },
     methods: {
         //搜索按钮的回调函数
         goSearch(){
@@ -56,7 +67,18 @@ export default {
 
             //对象的方式传参
             this.$router.push({name:"search",params:{keyword:this.keyword||undefined},query:this.$route.query})
-
+        },
+        //退出登录
+        async logout(){
+           //发请求 通知服务器退出登录【清除token】 
+           //清除项目的的数据 【userinfo、token】
+           try {
+               //退出成功回到首页
+               await this.$store.dispatch('userLogout');
+               this.$router.push('/home');
+           } catch (error) {
+               alert(error.message)
+           }
         }
     },
     mounted() {

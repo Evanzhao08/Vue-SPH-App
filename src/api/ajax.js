@@ -3,6 +3,7 @@ import axios from "axios";
 import nprogress from 'nprogress';
 //在当前模块中引入store
 import store from '@/store';
+
 //引入进度条样式
 import "nprogress/nprogress.css";
 
@@ -18,6 +19,11 @@ requests.interceptors.request.use((config)=>{
     if (store.state.detail.uuid_token) {
         //请求头添加个字段
         config.headers.userTempId = store.state.detail.uuid_token
+    };
+    //判断是否需要token带给服务器
+    if (store.state.user.token) {
+        //请求头添加个字段
+        config.headers.token = store.state.user.token
     }
     nprogress.start();
     return config;

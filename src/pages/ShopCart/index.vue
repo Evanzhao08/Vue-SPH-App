@@ -65,13 +65,13 @@
         <a href="#none">清除下柜商品</a>
       </div>
       <div class="money-box">
-        <div class="chosed">已选择 <span>0</span>件商品</div>
+        <div class="chosed">已选择 <span>{{orderNum}}</span>件商品</div>
         <div class="sumprice">
           <em>总价（不含运费） ：</em>
           <i class="summoney">{{ totalPrice }}</i>
         </div>
         <div class="sumbtn">
-          <a class="sum-btn" href="###" target="_blank">结算</a>
+          <a class="sum-btn" @click="$router.push('/trade')">结算</a>
         </div>
       </div>
     </div>
@@ -101,6 +101,9 @@ export default {
     isAllCheck() {
       return this.cartInfoList.every((item) => item.isChecked == 1);
     },
+    orderNum(){
+       return this.cartInfoList.length||0
+    }
   },
   mounted() {
     this.getData();
