@@ -24,7 +24,7 @@ export default {
   name:'',
   components:{ListContainer,Recommend,Rank,Like,Floor,Brand},
   mounted(){
-    this.$store.dispatch('getFloorList')
+    this.$store.dispatch('getFloorList');
   },
   computed:{
     ...mapState({
